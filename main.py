@@ -3,7 +3,9 @@
 from asciimatics.screen import Screen
 from asciimatics.event import KeyboardEvent
 from time import sleep
+
 from grid import Grid
+from my_algorithms import depth_first_search
 
 CELL = '\u2588'
 REST = 0.1
@@ -150,11 +152,20 @@ def test_codes(screen, grid):
             screen.refresh()
             
 
-def switch_algorithm(screen, grid, code):
-    print('algorithm switched to', code)
+def display_algorithm(screen, algorithm):
+    screen.print_at('Current Algorithm: ' + algorithm[0], 0, 25)
+    screen.refresh()
 
 
 def execute_mode(screen, grid):
+
+    algorithms = {  
+        49 : ['depth first search', depth_first_search],
+        50 : ['undefined algorithm', None]
+    }
+    current_algorithm = algorithms[49]
+    display_algorithm(screen, current_algorithm)
+
     while True:
         event = screen.get_event()
 
@@ -162,10 +173,18 @@ def execute_mode(screen, grid):
             code = event.key_code
 
             if code == 10:
-                print('run algorithm')
+                current_algorithm[1](screen, grid)
 
             elif code >= 49 and code <= 57:
-                switch_algorithm(screen, grid, code)
+
+                if code == 49:
+                    current_algorithm = algorithms[code]
+                elif code == 50:
+                    current_algorithm = algorithms[code]
+
+
+                display_algorithm(screen, current_algorithm)
+
 
             else:
                 edit_mode(screen, grid)
