@@ -7,6 +7,9 @@
 
 class Grid:
     def __init__(self, rows=20, collumns=100):
+        self.rows = rows
+        self.collumns = collumns
+
         self.cells = []
         for i in range(rows):
             self.cells.append([])
@@ -65,7 +68,7 @@ class Grid:
 
     def is_wall(self, cell):
         return_val = False
-        for wall in walls:
+        for wall in self.walls:
             if cell == wall:
                 return_val = True
                 break
@@ -90,6 +93,6 @@ class Grid:
 
 
 
-grid = Grid()
-grid.display()
+# grid = Grid()
+# grid.display()
 
