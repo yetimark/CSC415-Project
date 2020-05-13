@@ -1,3 +1,4 @@
+import random
 # These are the data structures for holding information about a position on the display
 
 # A cell is now a tuple in the format (x,y)
@@ -28,6 +29,27 @@ class Grid:
         # -- initially all "weighted" cells will be the same value -- 
         self.weighted = []
         self.weight = weight
+
+        self.graph = {}
+        for i in range(rows):
+            for j in range(collumns):
+                here = (i, j)
+                down = self.get_down(here)
+                right = self.get_right(here)
+
+                if down:
+                    rando = random.randint(1, 20)
+                    self.graph[(here, down)] = rando
+                    self.graph[(down, here)] = rando
+
+                if right:
+                    rando = random.randint(1, 15)
+                    self.graph[(here, right)] = rando
+                    self.graph[(right, here)] = rando
+
+    def get_distance(self, tuptup):
+        return self.graph[tuptup]
+
 
     def add_cell_weight(self, cell):
         self.weighted.append(cell)
@@ -141,6 +163,7 @@ class Grid:
 
 
 
-# grid = Grid()
+grid = Grid()
+print(grid.graph)
 # grid.display()
 
