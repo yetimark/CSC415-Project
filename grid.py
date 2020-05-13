@@ -6,7 +6,7 @@
 # A Grid is basically a 2D array of cells. It also has some extra fancy bells and whistles
 
 class Grid:
-    def __init__(self, rows=20, collumns=100):
+    def __init__(self, rows=20, collumns=100, weight=5):
         self.rows = rows
         self.collumns = collumns
 
@@ -23,6 +23,23 @@ class Grid:
         self.start = (collumns // 8, middle_row)
         self.end = ((collumns // 8) * 7, middle_row)
         self.walls = []
+
+        # - weights are set to a default value of 1 - 
+        # -- initially all "weighted" cells will be the same value -- 
+        self.weighted = []
+        self.weight = weight
+
+    def add_cell_weight(self, cell):
+        self.weighted.append(cell)
+
+    def remove_cell_weight(self, cell):
+        self.weighted.remove(cell)
+
+    def get_cell_weight(self, cell):
+        for weighted_cell in self.weighted:
+            if cell == weighted_cell:
+                return self.weight
+        return 1 # default weight
 
 
     def move_cursor(self, cell):

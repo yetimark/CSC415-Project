@@ -81,6 +81,9 @@ def edit_mode(screen, grid):
                 elif grid.is_wall(prev_cursor):
                     screen_print(screen, prev_cursor, screen.COLOUR_BLACK)
 
+                elif grid.get_cell_weight(prev_cursor) > 1:
+                    screen_print(screen, prev_cursor, screen.COLOUR_BLUE)
+
                 else:  
                     screen_print(screen, prev_cursor, screen.COLOUR_WHITE)
 
@@ -100,7 +103,7 @@ def edit_mode(screen, grid):
                 grid.end = grid.cursor
                 screen_print(screen, grid.end, screen.COLOUR_RED)
 
-            # - toggle wall - (w) 
+            # - toggle wall - (w)       FIX: A good place for a proper event handler
             elif code == 119:
                 if grid.is_wall(grid.cursor):
                     # - remove wall -
@@ -110,6 +113,17 @@ def edit_mode(screen, grid):
                     # - add wall -
                     grid.add_wall(grid.cursor)
                     screen_print(screen, grid.cursor, screen.COLOUR_BLACK)
+
+            # - toggle weight - (q) no good reason for q
+            elif code == 113:
+                if grid.get_cell_weight(grid.cursor) > 1:
+                    # - remove weight -
+                    grid.remove_cell_weight(grid.cursor)
+                    screen_print(screen, grid.cursor, screen.COLOUR_WHITE)
+                else:
+                    # - add weight -
+                    grid.add_cell_weight(grid.cursor)
+                    screen_print(screen, grid.cursor, screen.COLOUR_BLUE)
 
             # - exit edit mode - (esc)
             elif code == -1:
@@ -187,6 +201,9 @@ def grid_init(screen):
     # - walls for when layout swapping and saving is done
     for wall in grid.walls:
         screen_print(screen, wall, screen.COLOUR_BLACK)
+    # - weights for when layout swapping and saving is done
+    for weight in grid.weighted:
+        screen_print(screen, weighted, screen.COLOUR_BLUE)
 
     screen.refresh()
 
