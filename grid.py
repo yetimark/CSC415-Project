@@ -73,8 +73,39 @@ class Grid:
                 return_val = True
                 break
         return return_val
- 
 
+
+    # UP DOWN RIGHT AND LEFT return the value shifted that direction one
+    # OR ---- They return None to show there is not an available space next door
+
+    def get_up(self, cell):
+        dest = (cell[0], cell[1] -1)
+        if dest[1] < 0:
+            dest = False
+        return dest
+
+    def get_right(self, cell):
+        dest = (cell[0] +1, cell[1])
+        if dest[0] >= self.collumns:
+            dest = False
+        return dest        
+
+
+    def get_down(self, cell):
+        dest = (cell[0], cell[1] +1)
+        if dest[1] >= self.rows:
+            dest = False
+        return dest
+
+
+    def get_left(self, cell):
+        dest = (cell[0] -1, cell[1])
+        if dest[0] < 0:
+            dest = False
+        return dest
+
+
+    
 
     # used to check allignment before adding visuals
     def display(self):

@@ -5,31 +5,14 @@ from asciimatics.event import KeyboardEvent
 from time import sleep
 
 from grid import Grid
-from my_algorithms import depth_first_search
+from my_algorithms import depth_first_search, breadth_first_search
 
-CELL = '\u2588'
+
 REST = 0.1
 
 
-
-def input_demo(screen):
-    # screen.clear()
-
-    while True:
-        test = screen.get_event()
-        # screen.print_at(test, 0,0)
-        if(test != None):
-            screen.print_at(CELL, 0, 0, screen.COLOUR_GREEN)
-            screen.refresh()
-            sleep(REST)
-        else:
-            screen.print_at(CELL, 0, 0, screen.COLOUR_RED)
-            screen.refresh()
-            sleep(REST)
-
 def screen_print(screen, dest, color):
-    screen.print_at(CELL, dest[0], dest[1], color)
-
+    screen.print_at('\u2588', dest[0], dest[1], color)
 
 
 
@@ -78,10 +61,8 @@ def edit_mode(screen, grid):
             # - cursor movement -
             if(code < -100):
                 prev_cursor = grid.cursor
-                prev_colour = screen.get_from(prev_cursor[0], prev_cursor[1])[1]  # --- Foreground, I think this should be the color I want
+                prev_colour = screen.get_from(prev_cursor[0], prev_cursor[1])[1]  # --- Foreground
                 
-
-                # print('**************************** ',prev_colour)
                 dest = direction_handler(grid, code)
 
                 # - set new color -
@@ -141,8 +122,6 @@ def edit_mode(screen, grid):
             
         
 
-
-
 def test_codes(screen, grid):
     while True:
         event = screen.get_event()
@@ -153,15 +132,22 @@ def test_codes(screen, grid):
             
 
 def display_algorithm(screen, algorithm):
-    screen.print_at('Current Algorithm: ' + algorithm[0], 0, 25)
+    screen.print_at('Current Algorithm: ' + algorithm[0], 0, 22)
     screen.refresh()
 
 
 def execute_mode(screen, grid):
 
     algorithms = {  
-        49 : ['depth first search', depth_first_search],
-        50 : ['undefined algorithm', None]
+        49 : ['Depth First Search     ', depth_first_search],
+        50 : ['Breadth First Search   ', breadth_first_search],
+        51 : ['Undefined Algorithm    ', None],
+        52 : ['Undefined Algorithm    ', None],
+        53 : ['Undefined Algorithm    ', None],
+        54 : ['Undefined Algorithm    ', None],
+        55 : ['Undefined Algorithm    ', None],
+        56 : ['Undefined Algorithm    ', None],
+        57 : ['Undefined Algorithm    ', None]
     }
     current_algorithm = algorithms[49]
     display_algorithm(screen, current_algorithm)
@@ -176,15 +162,12 @@ def execute_mode(screen, grid):
                 current_algorithm[1](screen, grid)
 
             elif code >= 49 and code <= 57:
-
-                if code == 49:
-                    current_algorithm = algorithms[code]
-                elif code == 50:
-                    current_algorithm = algorithms[code]
-
-
+                current_algorithm = algorithms[code]
                 display_algorithm(screen, current_algorithm)
 
+            elif code == -1:
+                # escape
+                break
 
             else:
                 edit_mode(screen, grid)
@@ -193,14 +176,17 @@ def execute_mode(screen, grid):
 def grid_init(screen):
     grid = Grid()
 
-    for i in range(len(grid.cells[0])):
-        for j in range(len(grid.cells)):
-            screen.print_at(CELL, i, j, screen.COLOUR_WHITE)
+    for i in range(grid.collumns):
+        for j in range(grid.rows):
+            screen_print(screen, (i, j), screen.COLOUR_WHITE)
 
     # - start
-    screen.print_at(CELL, grid.start[0], grid.start[1], screen.COLOUR_GREEN)
+    screen_print(screen, grid.start, screen.COLOUR_GREEN)
     # - end
-    screen.print_at(CELL, grid.end[0], grid.end[1], screen.COLOUR_RED)
+    screen_print(screen, grid.end, screen.COLOUR_RED)
+    # - walls for when layout swapping and saving is done
+    for wall in grid.walls:
+        screen_print(screen, wall, screen.COLOUR_BLACK)
 
     screen.refresh()
 
